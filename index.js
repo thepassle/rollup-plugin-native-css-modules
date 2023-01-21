@@ -38,19 +38,19 @@ export default function css(options = {}) {
 
         await asyncWalk(ast, {
           enter: async node => {
-            /**
-             * @example `import styles from './styles.css' assert { type: 'css' };`
-             */
             if (
               isStaticCssImport(node) || 
               isDynamicCssImport(node)
             ) {
-              /**
-               * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
-               */
               if(
+                /**
+                 * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
+                 */
                 isDynamicCssImport(node) &&
                 isTemplateStringWithVariables(node) ||
+                /**
+                 * @example `import('./foo-' + i + '.css', { assert: { type: 'css'} })`
+                 */
                 isDynamicCssImport(node) &&
                 node.source.type === 'BinaryExpression'
               ) {
@@ -64,20 +64,12 @@ ${code.substring(node.start, node.end)}
                 return;
               }
 
-              /**
-               * @example `import(foo, { assert: { type: 'css'} });`
-               */
               if(
                 node.source.type !== 'Literal' &&
                 node.source.type !== 'TemplateLiteral'
               ) {
                 return;
               }
-              /**
-               * Resolve path to the module specifier
-               * @example bare module specifier: 'foo/index.css'
-               * @example relative module specifier: './src/index.css'
-               */
               const moduleSpecifier = /** @type {string} */ (node.source.value || node.source.quasis[0].value.raw);
 
               /**

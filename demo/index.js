@@ -11,6 +11,17 @@ const dynamicWithVariables = await import(`./dynamic-${1}.css`, {
   assert: { type: 'css' },
 });
 
+const quux = '';
+const dynamicVariable = await import(quux, {
+  assert: { type: 'css' },
+});
+
+const dynamicImportTemplateString = await import(`./template-string.css`, {
+  assert: { type: 'css' },
+});
+
+console.log(dynamicImportTemplateString);
+console.log(dynamicVariable);
 console.log(dynamicWithVariables);
 console.log(dynamic);
 console.log(bar);

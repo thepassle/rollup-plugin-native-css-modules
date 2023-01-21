@@ -43,7 +43,6 @@ export default function css(options = {}) {
               isStaticCssImport(node) || 
               isDynamicCssImport(node)
             ) {
-
               /**
                * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
                */
@@ -61,22 +60,24 @@ ${code.substring(node.start, node.end)}
 `);
                 return;
               }
+
+              /**
+               * @example `import(foo, { assert: { type: 'css'} });`
+               */
+              if(node.source.type === 'Identifier') {
+                return;
+              }
+
               /**
                * Resolve path to the module specifier
                * @example bare module specifier: 'foo/index.css'
                * @example relative module specifier: './src/index.css'
                */
-              const moduleSpecifier = /** @type {string} */ (node.source.value);
-
-              if (isDynamicCssImport(node)) {
-                console.log(1111, moduleSpecifier)
-              }
-
+              const moduleSpecifier = /** @type {string} */ (node.source.value || node.source.quasis[0].value.raw);
               const dirname = path.dirname(id);
               const absolutePathToCssModule = isBareModuleSpecifier(moduleSpecifier)
                 ? require.resolve(moduleSpecifier)
                 : path.join(dirname, moduleSpecifier);
-
               /** 
                * If we havent processed this file before
                */

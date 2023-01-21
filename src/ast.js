@@ -27,3 +27,15 @@ export function isDynamicCssImport(node) {
     node.arguments?.[0]?.properties?.[0]?.value?.properties?.[0]?.value?.value === 'css'
   )
 }
+
+/**
+ * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
+ * @param {import('estree-walker').Node} node
+ * @returns {boolean}
+ */
+export function isTemplateStringWithVariables(node) {
+  return (
+    node.source.type === 'TemplateLiteral' &&
+    node.source?.quasis?.length > 1
+  )
+}

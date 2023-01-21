@@ -4,7 +4,7 @@ import { createRequire } from 'module';
 import { asyncWalk } from 'estree-walker';
 import MagicString from 'magic-string';
 
-import { isStaticCssImport, isDynamicCssImport } from './src/ast.js';
+import { isStaticCssImport, isDynamicCssImport, isTemplateStringWithVariables } from './src/ast.js';
 import { checksumFile, isBareModuleSpecifier } from './src/utils.js';
 
 const require = createRequire(import.meta.url);
@@ -48,8 +48,7 @@ export default function css(options = {}) {
                */
               if(
                 isDynamicCssImport(node) &&
-                node.source.type === 'TemplateLiteral' &&
-                node.source?.quasis?.length > 1
+                isTemplateStringWithVariables(node)
               ) {
                 console.warn(`
 [ROLLUP-PLUGIN-NATIVE-CSS-MODULES]: Dynamic imports with variables are not supported, since they rely on runtime code they are hard to statically analyze.

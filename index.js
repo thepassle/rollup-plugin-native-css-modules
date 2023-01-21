@@ -9,6 +9,8 @@ import { checksumFile, isBareModuleSpecifier } from './src/utils.js';
 
 const require = createRequire(import.meta.url);
 
+const ignoredProtocols = ['data:', 'http:', 'https:'];
+
 /**
  * @param {{
  *  transform?: (code: string) => string | Promise<string>
@@ -48,7 +50,9 @@ export default function css(options = {}) {
                */
               if(
                 isDynamicCssImport(node) &&
-                isTemplateStringWithVariables(node)
+                isTemplateStringWithVariables(node) ||
+                isDynamicCssImport(node) &&
+                node.source.type === 'BinaryExpression'
               ) {
                 console.warn(`
 [ROLLUP-PLUGIN-NATIVE-CSS-MODULES]: Dynamic imports with variables are not supported, since they rely on runtime code they are hard to statically analyze.
@@ -63,20 +67,31 @@ ${code.substring(node.start, node.end)}
               /**
                * @example `import(foo, { assert: { type: 'css'} });`
                */
-              if(node.source.type === 'Identifier') {
+              if(
+                node.source.type !== 'Literal' &&
+                node.source.type !== 'TemplateLiteral'
+              ) {
                 return;
               }
-
               /**
                * Resolve path to the module specifier
                * @example bare module specifier: 'foo/index.css'
                * @example relative module specifier: './src/index.css'
                */
               const moduleSpecifier = /** @type {string} */ (node.source.value || node.source.quasis[0].value.raw);
+
+              /**
+               * Ignore external css files or data URIs
+               */
+              if(ignoredProtocols.some(protocol => moduleSpecifier.startsWith(protocol))) {
+                return;
+              }
+
               const dirname = path.dirname(id);
               const absolutePathToCssModule = isBareModuleSpecifier(moduleSpecifier)
                 ? require.resolve(moduleSpecifier)
                 : path.join(dirname, moduleSpecifier);
+
               /** 
                * If we havent processed this file before
                */

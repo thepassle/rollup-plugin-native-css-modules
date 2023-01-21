@@ -1,0 +1,28 @@
+{
+  "name": "rollup-plugin-native-css-modules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [
+    "native",
+    "css",
+    "modules",
+    "import",
+    "assertions",
+    "rollup"
+  ],
+  "author": "Pascal Schilp <pascalschilp@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "estree-walker": "^3.0.3",
+    "magic-string": "^0.27.0",
+    "rollup": "^3.10.0"
+  },
+  "devDependencies": {
+    "@thepassle/css": "^1.0.0"
+  }
+}

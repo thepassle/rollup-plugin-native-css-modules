@@ -5,6 +5,11 @@ Use native CSS modules with import assertions in Rollup. This plugin is intended
 This plugin does **not** transform any CSS module imports to JavaScript, it leaves the import statements and imports in tact.
 
 ## Example
+
+Checkout the example on [Stackblitz](https://stackblitz.com/edit/rollup-repro-fbdojc).
+
+Or take a look at the [example project](https://github.com/thepassle/css-example-project) for a more elaborate example.
+
 ### Input
 
 `src/index.js`:

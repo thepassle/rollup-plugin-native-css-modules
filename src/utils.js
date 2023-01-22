@@ -1,18 +1,13 @@
-import { createReadStream } from 'fs';
-import crypto from 'crypto';
+import { createHash } from 'node:crypto';
+
+const DEFAULT_HASH_SIZE = 8;
 
 /**
- * @param {string} path 
- * @returns {Promise<string>}
+ * @param {string} source 
+ * @returns {string}
  */
-export function checksumFile(path) {
-  return new Promise((resolve, reject) => {
-    const hash = crypto.createHash('shake256', { outputLength: 8 });
-    const stream = createReadStream(path);
-    stream.on('error', err => reject(err));
-    stream.on('data', chunk => hash.update(chunk));
-    stream.on('end', () => resolve(hash.digest('hex')));
-  });
+export function getSourceHash(source) {
+	return createHash('sha256').update(source).digest('hex').slice(0, DEFAULT_HASH_SIZE);
 }
 
 /**

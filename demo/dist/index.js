@@ -1,6 +1,6 @@
-import styleSheet from './styles-a28f51d8a292462c.css' assert { type: 'css' };
-import fooStyles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
-import styleSheet2 from './styles-981fdc66c31c1bf5.css' assert { type: 'css' };
+import styleSheet from './styles-3275f665.css' assert { type: 'css' };
+import fooStyles from './styles-3a3f9686.css' assert { type: 'css' };
+import styleSheet2 from './styles-ef356b6d.css' assert { type: 'css' };
 
 console.log(styleSheet);
 
@@ -10,7 +10,7 @@ console.log(styleSheet);
 console.log(styleSheet2);
 const bar = 2;
 
-const dynamic = await import('./styles-088e4e988949df7a.css', { assert: { type: 'css' } });
+const dynamic = await import('./styles-eff1cae3.css', { assert: { type: 'css' } });
 
 const dynamicWithVariables = await import(`./dynamic-${1}.css`, {
   assert: { type: 'css' },
@@ -21,7 +21,7 @@ const dynamicVariable = await import(quux, {
   assert: { type: 'css' },
 });
 
-const dynamicImportTemplateString = await import('./styles-955123d8d538a1f2.css', { assert: { type: 'css' } });
+const dynamicImportTemplateString = await import('./styles-f32a2851.css', { assert: { type: 'css' } });
 
 const externalHttps = await import('https://foo.com/index.css', { assert: { type: 'css' } });
 const externalHttp = await import('http://foo.com/index.css', { assert: { type: 'css' } });

@@ -16,7 +16,7 @@ import styles from './styles.css' assert { type: 'css' };
 
 `dist/index.js`:
 ```js
-import styles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
+import styles from './styles-3275f665.css' assert { type: 'css' };
 ```
 
 ## Usage
@@ -94,7 +94,7 @@ import styles from './styles.css' assert { type: 'css' };
 
 **output:**
 ```js
-import styles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
+import styles from './styles-3275f665.css' assert { type: 'css' };
 ```
 
 ### Transform
@@ -222,8 +222,8 @@ Bundling this would lead to the following build output:
 <summary><code>bundle.js</code></summary>
 
 ```js
-import blueStyles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
-import redStyles from './styles-955123d8d538a1f2.css' assert { type: 'css' };
+import blueStyles from './styles-3275f665.css' assert { type: 'css' };
+import redStyles from './styles-3a3f9686.css' assert { type: 'css' };
 
 class ElementA extends HTMLElement {
   constructor() {
@@ -256,7 +256,7 @@ customElements.define('element-b', ElementB);
 </details>
 
 <details>
-<summary><code>styles-955123d8d538a1f2.css</code></summary>
+<summary><code>styles-3a3f9686.css</code></summary>
 
 ```css
 h1 {
@@ -266,7 +266,7 @@ h1 {
 </details>
 
 <details>
-<summary><code>styles-6e5466f81b971d57.css</code></summary>
+<summary><code>styles-3275f665.css</code></summary>
 
 ```css
 h1 {
@@ -283,7 +283,7 @@ To illustrate:
 <summary><code>bundle.js</code></summary>
 
 ```js
-import bundledStyles from './styles-a28f51d8a292462c.css' assert { type: 'css' };
+import bundledStyles from './styles-f32a2851.css' assert { type: 'css' };
 
 class ElementA extends HTMLElement {
   constructor() {
@@ -320,7 +320,7 @@ customElements.define('element-b', ElementB);
 
 
 <details>
-<summary><code>styles-a28f51d8a292462c.css</code></summary>
+<summary><code>styles-f32a2851.css</code></summary>
 
 ```css
 h1 {

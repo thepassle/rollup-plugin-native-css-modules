@@ -5,7 +5,7 @@ import { asyncWalk } from 'estree-walker';
 import MagicString from 'magic-string';
 
 import { isStaticCssImport, isDynamicCssImport, isTemplateStringWithVariables } from './src/ast.js';
-import { checksumFile, isBareModuleSpecifier } from './src/utils.js';
+import { getSourceHash, isBareModuleSpecifier } from './src/utils.js';
 
 const require = createRequire(import.meta.url);
 
@@ -95,8 +95,8 @@ ${code.substring(node.start, node.end)}
                   ? await options?.transform(cssModuleContents)
                   : cssModuleContents;
 
-                const checksum = await checksumFile(absolutePathToCssModule)
-                const assetName = `styles-${checksum}.css`;
+                const hash = getSourceHash(assetSource);
+                const assetName = `styles-${hash}.css`;
                 cssFilesMap[absolutePathToCssModule] = assetName;
 
                 this.emitFile({

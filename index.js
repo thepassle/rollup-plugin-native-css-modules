@@ -4,7 +4,12 @@ import { createRequire } from 'module';
 import { asyncWalk } from 'estree-walker';
 import MagicString from 'magic-string';
 
-import { isStaticCssImport, isDynamicCssImport, isTemplateStringWithVariables } from './src/ast.js';
+import { 
+  isStaticCssImport, 
+  isDynamicCssImport, 
+  isTemplateStringWithVariables, 
+  isBinaryExpression 
+} from './src/ast.js';
 import { getSourceHash, isBareModuleSpecifier } from './src/utils.js';
 
 const require = createRequire(import.meta.url);
@@ -46,13 +51,11 @@ export default function css(options = {}) {
                 /**
                  * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
                  */
-                isDynamicCssImport(node) &&
                 isTemplateStringWithVariables(node) ||
                 /**
                  * @example `import('./foo-' + i + '.css', { assert: { type: 'css'} })`
                  */
-                isDynamicCssImport(node) &&
-                node.source.type === 'BinaryExpression'
+                isBinaryExpression(node)
               ) {
                 console.warn(`
 [ROLLUP-PLUGIN-NATIVE-CSS-MODULES]: Dynamic imports with variables are not supported, since they rely on runtime code they are hard to statically analyze.
@@ -70,11 +73,10 @@ ${code.substring(node.start, node.end)}
               ) {
                 return;
               }
+
               const moduleSpecifier = /** @type {string} */ (node.source.value || node.source.quasis[0].value.raw);
 
-              /**
-               * Ignore external css files or data URIs
-               */
+              /** Ignore external css files or data URIs */
               if(ignoredProtocols.some(protocol => moduleSpecifier.startsWith(protocol))) {
                 return;
               }
@@ -84,9 +86,7 @@ ${code.substring(node.start, node.end)}
                 ? require.resolve(moduleSpecifier)
                 : path.join(dirname, moduleSpecifier);
 
-              /** 
-               * If we havent processed this file before
-               */
+              /** If we havent processed this file before */
               if (!cssFilesMap[absolutePathToCssModule]) {
                 const cssModuleContentsBuffer = await fs.readFile(absolutePathToCssModule);
                 const cssModuleContents = await cssModuleContentsBuffer.toString();

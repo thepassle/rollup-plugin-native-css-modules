@@ -29,7 +29,7 @@ export function isDynamicCssImport(node) {
 }
 
 /**
- * @example `import(`./foo-${i}.css`, { assert: { type: 'css'} })`
+ * @example import(`./foo-${i}.css`, { assert: { type: 'css'} })
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
@@ -38,4 +38,13 @@ export function isTemplateStringWithVariables(node) {
     node.source.type === 'TemplateLiteral' &&
     node.source?.quasis?.length > 1
   )
+}
+
+/**
+ * @example import('./foo-' + i + '.css', { assert: { type: 'css'} })
+ * @param {import('estree-walker').Node} node
+ * @returns {boolean}
+ */
+export function isBinaryExpression(node) {
+  return node.source.type === 'BinaryExpression';
 }

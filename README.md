@@ -118,6 +118,183 @@ export default {
 };
 ```
 
-## Polyfilling
+
+## FAQ
+
+### Polyfilling
 
 At the time of writing, browser support for import assertions is still low, so you're probably going to need to polyfill them. You can do this via [`es-module-shims`](https://github.com/guybedford/es-module-shims), note that you'll also need a polyfill for constructable stylesheets, which you can polyfill via [`construct-style-sheets-polyfill`](https://www.npmjs.com/package/construct-style-sheets-polyfill).
+
+### Why are CSS files not combined and bundled?
+
+Because you can't. Consider the following example:
+
+```
+my-app/
+├─ index.js
+├─ element-a.js
+├─ element-b.js
+├─ blue-styles.css
+├─ red-styles.css
+```
+
+<details>
+<summary><code>index.js</code></summary>
+
+```js
+import './element-a.js';
+import './element-b.js';
+```
+</details>
+
+<details>
+<summary><code>element-a.js</code></summary>
+
+```js
+import { LitElement } from 'lit';
+import blueStyles from './blue-styles.css' assert { type: 'css' };
+
+class ElementA extends LitElement {
+  static styles = [blueStyles];
+  render() {
+    return html`<h1>blue</h1>`
+  }
+}
+customElements.define('element-a', ElementA);
+```
+</details>
+
+<details>
+<summary><code>element-b.js</code></summary>
+
+```js
+import { LitElement } from 'lit';
+import redStyles from './red-styles.css' assert { type: 'css' };
+
+class ElementB extends LitElement {
+  static styles = [redStyles];
+  render() {
+    return html`<h1>red</h1>`
+  }
+}
+customElements.define('element-b', ElementB);
+```
+</details>
+
+<details>
+<summary><code>blue-styles.css</code></summary>
+
+```css
+h1 {
+  color: blue;
+}
+```
+</details>
+
+<details>
+<summary><code>red-styles.css</code></summary>
+
+```css
+h1 {
+  color: red;
+}
+```
+</details>
+
+Bundling this would lead to the following build output:
+
+<details>
+<summary><code>bundle.js</code></summary>
+
+```js
+import { LitElement } from 'lit';
+import redStyles from './styles-955123d8d538a1f2.css' assert { type: 'css' };
+import blueStyles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
+
+class ElementB extends LitElement {
+  static styles = [redStyles];
+  render() {
+    return html`<h1>red</h1>`
+  }
+}
+customElements.define('element-b', ElementB);
+
+
+class ElementA extends LitElement {
+  static styles = [blueStyles];
+  render() {
+    return html`<h1>blue</h1>`
+  }
+}
+customElements.define('element-a', ElementA);
+```
+</details>
+
+<details>
+<summary><code>styles-955123d8d538a1f2.css</code></summary>
+
+```css
+h1 {
+  color: red;
+}
+```
+</details>
+
+<details>
+<summary><code>styles-6e5466f81b971d57.css</code></summary>
+
+```css
+h1 {
+  color: blue;
+}
+```
+</details>
+
+If you would combine the CSS files for `blueStyles` and `redStyles` into one, and use that stylesheet in both components, it would lead to style clashes; you would only have blue `<h1>`s, instead of one blue `<h1>` for `<element-a>` and one red `<h1>` for `<element-b>`.
+
+To illustrate:
+
+<details>
+<summary><code>bundle.js</code></summary>
+
+```js
+import { LitElement } from 'lit';
+import bundledStyles from './styles-a28f51d8a292462c.css' assert { type: 'css' };
+
+class ElementB extends LitElement {
+  static styles = [bundledStyles];
+  render() {
+    return html`<h1>red</h1>`
+  }
+}
+customElements.define('element-b', ElementB);
+
+
+class ElementA extends LitElement {
+  static styles = [bundledStyles];
+  render() {
+    return html`<h1>blue</h1>`
+  }
+}
+customElements.define('element-a', ElementA);
+```
+
+</details>
+
+
+
+
+<details>
+<summary><code>styles-a28f51d8a292462c.css</code></summary>
+
+```css
+h1 {
+  color: red;
+}
+
+h1 {
+  color: blue;
+}
+```
+
+</details>

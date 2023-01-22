@@ -51,7 +51,7 @@ export default {
 
 ## Features
 
-At time of writing Rollup V3 supports import assertion syntax, however, Rollup will still try to parse any module that gets imported in your source code and expect it to be JavaScript. This will cause Rollup to give an error, because it'll try to parse CSS files expecting it to be JavaScript. This plugin fixes that.
+At time of writing Rollup V3 supports import assertion syntax, however, Rollup will still try to parse any module that gets imported in your source code and expect it to be JavaScript. This will cause Rollup to throw an error, because it'll try to parse CSS files expecting it to be JavaScript. This plugin fixes that.
 
 ### Support
 
@@ -66,9 +66,18 @@ import('./styles.css', { assert: { type: 'css'} });
 This plugin does NOT support:
 ```js
 import(`./styles-${i}.css`, { assert: { type: 'css'} });
+import('./styles-' + i + '.css', { assert: { type: 'css'} });
 ```
 
 The reason for this is that imports with dynamic variables are hard to statically analyze, because they rely on runtime code.
+
+External stylesheets are ignored:
+```js
+import styles from 'http://styles.com/index.css' assert { type: 'css' };
+import styles from 'https://styles.com/index.css' assert { type: 'css' };
+```
+
+Data uri's are also ignored.
 
 ### Deduplication
 
@@ -105,14 +114,10 @@ export default {
   },
   plugins: [
     css({
-      transform: (css) => {
-        const { code } = transform({
-          code: Buffer.from(css),
-          minify: true
-        });
-
-        return code;
-      }
+      transform: (css) => transform({
+        code: Buffer.from(css),
+        minify: true
+      }).code.toString()
     })
   ]
 };

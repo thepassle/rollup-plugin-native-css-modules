@@ -151,15 +151,20 @@ import './element-b.js';
 <summary><code>element-a.js</code></summary>
 
 ```js
-import { LitElement } from 'lit';
 import blueStyles from './blue-styles.css' assert { type: 'css' };
 
-class ElementA extends LitElement {
-  static styles = [blueStyles];
-  render() {
-    return html`<h1>blue</h1>`
+class ElementA extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [blueStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>blue</h1>';
   }
 }
+
 customElements.define('element-a', ElementA);
 ```
 </details>
@@ -168,15 +173,20 @@ customElements.define('element-a', ElementA);
 <summary><code>element-b.js</code></summary>
 
 ```js
-import { LitElement } from 'lit';
 import redStyles from './red-styles.css' assert { type: 'css' };
 
-class ElementB extends LitElement {
-  static styles = [redStyles];
-  render() {
-    return html`<h1>red</h1>`
+class ElementB extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [redStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>red</h1>';
   }
 }
+
 customElements.define('element-b', ElementB);
 ```
 </details>
@@ -207,26 +217,36 @@ Bundling this would lead to the following build output:
 <summary><code>bundle.js</code></summary>
 
 ```js
-import { LitElement } from 'lit';
-import redStyles from './styles-955123d8d538a1f2.css' assert { type: 'css' };
 import blueStyles from './styles-6e5466f81b971d57.css' assert { type: 'css' };
+import redStyles from './styles-955123d8d538a1f2.css' assert { type: 'css' };
 
-class ElementB extends LitElement {
-  static styles = [redStyles];
-  render() {
-    return html`<h1>red</h1>`
+class ElementA extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [blueStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>blue</h1>';
   }
 }
-customElements.define('element-b', ElementB);
 
-
-class ElementA extends LitElement {
-  static styles = [blueStyles];
-  render() {
-    return html`<h1>blue</h1>`
-  }
-}
 customElements.define('element-a', ElementA);
+
+class ElementB extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [redStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>red</h1>';
+  }
+}
+
+customElements.define('element-b', ElementB);
 ```
 </details>
 
@@ -250,7 +270,7 @@ h1 {
 ```
 </details>
 
-If you would combine the CSS files for `blueStyles` and `redStyles` into one, and use that stylesheet in both components, it would lead to style clashes; you would only have blue `<h1>`s, instead of one blue `<h1>` for `<element-a>` and one red `<h1>` for `<element-b>`.
+If you would combine the CSS files for `blueStyles` and `redStyles` into one, and use that stylesheet in both components, it would lead to style clashes; you would only have red `<h1>`s, instead of one blue `<h1>` for `<element-a>` and one red `<h1>` for `<element-b>`.
 
 To illustrate:
 
@@ -258,25 +278,35 @@ To illustrate:
 <summary><code>bundle.js</code></summary>
 
 ```js
-import { LitElement } from 'lit';
 import bundledStyles from './styles-a28f51d8a292462c.css' assert { type: 'css' };
 
-class ElementB extends LitElement {
-  static styles = [bundledStyles];
-  render() {
-    return html`<h1>red</h1>`
+class ElementA extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [bundledStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>blue</h1>';
   }
 }
-customElements.define('element-b', ElementB);
 
-
-class ElementA extends LitElement {
-  static styles = [bundledStyles];
-  render() {
-    return html`<h1>blue</h1>`
-  }
-}
 customElements.define('element-a', ElementA);
+
+class ElementB extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [bundledStyles];
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = '<h1>red</h1>';
+  }
+}
+
+customElements.define('element-b', ElementB);
 ```
 
 </details>
@@ -289,11 +319,11 @@ customElements.define('element-a', ElementA);
 
 ```css
 h1 {
-  color: red;
+  color: blue;
 }
 
 h1 {
-  color: blue;
+  color: red;
 }
 ```
 

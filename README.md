@@ -117,3 +117,7 @@ export default {
   ]
 };
 ```
+
+## Polyfilling
+
+At the time of writing, browser support for import assertions is still low, so you're probably going to need to polyfill them. You can do this via [`es-module-shims`](https://github.com/guybedford/es-module-shims), note that you'll also need a polyfill for constructable stylesheets, which you can polyfill via [`construct-style-sheets-polyfill`](https://www.npmjs.com/package/construct-style-sheets-polyfill).

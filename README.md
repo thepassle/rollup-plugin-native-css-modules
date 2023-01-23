@@ -40,7 +40,7 @@ export default {
     format: 'esm'
   },
   plugins: [
-    css()
+    css(),
     /**
      * Or:
      */

@@ -11,6 +11,12 @@ export default {
       transform: code => {
         return `${code} .bar { color: red;}`;
       }
-    })
+    }),
+    {
+      name: 'foo',
+      renderChunk(code, b) {
+        console.log(b);
+      }
+    }
   ]
 };

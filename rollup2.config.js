@@ -8,7 +8,7 @@ export default {
   },
   plugins: [
     css({
-      bundle: 'js'
+      bundle: 'css'
       // transform: code => {
       //   return `${code} .bar { color: red;}`;
       // }

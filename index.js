@@ -190,11 +190,11 @@ export default function css(options = {}) {
         let newImports = [];
         const alreadyAdded = [];
   
-        for(const { dynamic, source, specifier } of cssImports) {
+        for (const { dynamic, source, specifier } of cssImports) {
           const normalizedSource = source.replace('./', '');
 
           if (options.bundle === 'css') {
-            if(!alreadyAdded.find(({source}) => source === normalizedSource)) {
+            if (!alreadyAdded.find(({source}) => source === normalizedSource)) {
               bundledStyleSheet += `@supports sheet(${normalizedSource}) {${cssSourcesMap[source]}}\n`
               alreadyAdded.push({
                 source: normalizedSource,
@@ -237,7 +237,7 @@ export default function css(options = {}) {
         });
   
         if(options.bundle === 'css') {
-          const bundledStylesheetImport = `import ${BUNDLE_VAR} from './${bundledStyleSheetAssetName}' assert { type: 'css' };`
+          const bundledStylesheetImport = `import ${BUNDLE_VAR} from './${bundledStyleSheetAssetName}' with { type: 'css' };`
           magicString.prepend(newImports.join(''));
           // @TODO minify runtime
           magicString.prepend(runtime);

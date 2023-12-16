@@ -1,0 +1,6 @@
+@supports sheet(__ROLLUP_PLUGIN_NATIVE_CSS_MODULES_styles-dca460be.css) {body {
+  color: red;
+}}
+@supports sheet(__ROLLUP_PLUGIN_NATIVE_CSS_MODULES_styles-b27c71a0.css) {body {
+  color: blue;
+}}

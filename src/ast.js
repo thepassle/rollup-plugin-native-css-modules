@@ -1,37 +1,37 @@
 import { IGNORED_PROTOCOLS } from './CONSTANTS.js';
 
 /**
- * @example import styles from './styles.css' assert { type: 'css' };
+ * @example import styles from './styles.css' with { type: 'css' };
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
 export function isStaticCssImport(node) {
   return (
     node.type === 'ImportDeclaration' &&
-    node.assertions?.length &&
-    node.assertions.some(assertion => (
-      assertion.key.name === 'type' &&
-      assertion.value.value === 'css'
+    node.attributes?.length &&
+    node.attributes.some(attribute => (
+      attribute.key.name === 'type' &&
+      attribute.value.value === 'css'
     ))
   )
 }
 
 /**
- * @example import('./styles.css', {assert: { type: 'css' }});
+ * @example import('./styles.css', { with: { type: 'css' }});
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
 export function isDynamicCssImport(node) {
   return (
     node.type === 'ImportExpression' &&
-    node.arguments?.[0]?.properties?.[0]?.key?.name === 'assert' &&
+    node.arguments?.[0]?.properties?.[0]?.key?.name === 'with' &&
     node.arguments?.[0]?.properties?.[0]?.value?.properties?.[0]?.key.name === 'type' &&
     node.arguments?.[0]?.properties?.[0]?.value?.properties?.[0]?.value?.value === 'css'
   )
 }
 
 /**
- * @example import(`./foo-${i}.css`, { assert: { type: 'css'} })
+ * @example import(`./foo-${i}.css`, { with: { type: 'css'} })
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
@@ -43,7 +43,7 @@ export function isTemplateStringWithVariables(node) {
 }
 
 /**
- * @example import('./foo-' + i + '.css', { assert: { type: 'css'} })
+ * @example import('./foo-' + i + '.css', { with: { type: 'css'} })
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
@@ -52,7 +52,7 @@ export function isConcatenatedSource(node) {
 }
 
 /**
- * @example const styles = await import('./styles.css', { assert: { type: 'css' } });
+ * @example const styles = await import('./styles.css', { with: { type: 'css' } });
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
@@ -65,7 +65,7 @@ export function isAwaitDynamicImport(node) {
 }
 
 /**
- * @example const styles = import('./styles.css', { assert: { type: 'css' } });
+ * @example const styles = import('./styles.css', { with: { type: 'css' } });
  * @param {import('estree-walker').Node} node
  * @returns {boolean}
  */
